@@ -128,6 +128,10 @@ function maybe_collect(will_block::Bool=false)
   end
   Base.@atomic stats.last_time = current_time
 
+  # determine the collection type
+  ## only when blocking, we can afford a full GC
+  full_gc = pressure > 0.95 && will_block
+
   # finally, call the GC
   pre_gc_live = stats.live
   #gc_time = Base.@elapsed GC.gc(pressure > 0.9 ? true : false)
