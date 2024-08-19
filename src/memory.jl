@@ -130,12 +130,14 @@ function maybe_collect(will_block::Bool=false)
 
   # determine the collection type
   ## only when blocking, we can afford a full GC
-  full_gc = pressure > 0.99 && will_block
+  #full_gc = pressure > 0.99 && will_block
 
   # finally, call the GC
   pre_gc_live = stats.live
   #gc_time = Base.@elapsed GC.gc(pressure > 0.9 ? true : false)
-  gc_time = Base.@elapsed GC.gc(full_gc)
+  #gc_time = Base.@elapsed GC.gc(full_gc)
+  gc_time = Base.@elapsed GC.gc(false) #Reverting to original
+  
   post_gc_live = stats.live
   memory_freed = pre_gc_live - post_gc_live
   Base.@atomic stats.last_freed = memory_freed
